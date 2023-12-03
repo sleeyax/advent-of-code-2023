@@ -1,7 +1,7 @@
 advent_of_code::solution!(2);
 
 struct Game {
-    pub id: usize,
+    id: usize,
     colorsets: Vec<Vec<(usize, Color)>>,
 }
 
@@ -77,7 +77,20 @@ pub fn part_one(input: &str) -> Option<usize> {
 }
 
 pub fn part_two(input: &str) -> Option<usize> {
-    None
+    // There's probably a more performant way to do this, but I'm too sick to figure it out.
+    // Also, my tuple and enum approach is probably overkill for this challenge, but I wanted to prepare for the possibility of aditional colors being added to the game.
+
+    let mut result = 0;
+
+    for line in input.lines() {
+        let game = Game::from(line);
+        let red = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Red { Some(a) } else { None }).max().unwrap();
+        let green = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Green { Some(a) } else { None }).max().unwrap();
+        let blue = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Blue { Some(a) } else { None }).max().unwrap();
+        result += red * green * blue;
+    }
+
+    Some(result)
 }
 
 #[cfg(test)]
@@ -93,6 +106,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(2286));
     }
 }
