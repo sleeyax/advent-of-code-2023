@@ -25,7 +25,7 @@ impl From<&str> for Game {
             colorsets.push(colorset);
         }
 
-        Game {id, colorsets}
+        Game { id, colorsets }
     }
 }
 
@@ -34,7 +34,11 @@ impl Game {
     pub fn play(&self, bag: Vec<(usize, Color)>) -> bool {
         for (amount, color) in bag {
             for colorset in &self.colorsets {
-                if colorset.iter().find(|(a, c)| c == &color && a > &amount).is_some() {
+                if colorset
+                    .iter()
+                    .find(|(a, c)| c == &color && a > &amount)
+                    .is_some()
+                {
                     return false;
                 }
             }
@@ -48,7 +52,7 @@ impl Game {
 enum Color {
     Red,
     Green,
-    Blue
+    Blue,
 }
 
 impl From<&str> for Color {
@@ -69,7 +73,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         let game = Game::from(line);
         let bag = vec![(12, Color::Red), (13, Color::Green), (14, Color::Blue)];
         if game.play(bag) {
-             result += game.id;
+            result += game.id;
         }
     }
 
@@ -84,9 +88,27 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     for line in input.lines() {
         let game = Game::from(line);
-        let red = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Red { Some(a) } else { None }).max().unwrap();
-        let green = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Green { Some(a) } else { None }).max().unwrap();
-        let blue = game.colorsets.iter().flatten().filter_map(|(a, c)| if *c == Color::Blue { Some(a) } else { None }).max().unwrap();
+        let red = game
+            .colorsets
+            .iter()
+            .flatten()
+            .filter_map(|(a, c)| if *c == Color::Red { Some(a) } else { None })
+            .max()
+            .unwrap();
+        let green = game
+            .colorsets
+            .iter()
+            .flatten()
+            .filter_map(|(a, c)| if *c == Color::Green { Some(a) } else { None })
+            .max()
+            .unwrap();
+        let blue = game
+            .colorsets
+            .iter()
+            .flatten()
+            .filter_map(|(a, c)| if *c == Color::Blue { Some(a) } else { None })
+            .max()
+            .unwrap();
         result += red * green * blue;
     }
 
