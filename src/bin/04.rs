@@ -22,10 +22,12 @@ pub fn part_one(input: &str) -> Option<u32> {
                 .iter()
                 .filter_map(|c| winning_cards.contains(c).then_some(*c))
                 .collect::<Vec<_>>();
-            let mut points = 0;
-            if good_cards.len() != 0 {
-                points = 2_u32.pow((good_cards.len() as u32) - 1);
-            }
+            let good_cards_len = good_cards.len() as u32;
+
+            let points = match good_cards_len {
+                0 => 0,
+                _ => 2_u32.pow(good_cards_len - 1),
+            };
 
             points
         })
