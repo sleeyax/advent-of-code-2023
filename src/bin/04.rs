@@ -1,27 +1,35 @@
 advent_of_code::solution!(4);
 
 fn parse_cards(input: &str) -> Vec<u32> {
-    input.trim().split_ascii_whitespace().map(|x| x.parse::<u32>().unwrap()).collect::<Vec<u32>>()
+    input
+        .trim()
+        .split_ascii_whitespace()
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect::<Vec<u32>>()
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut total = 0;
+    let total = input
+        .lines()
+        .map(|line| {
+            let line = line.split(":").last().unwrap().trim();
 
-    for line in input.lines() {
-        let line = line.split(":").last().unwrap().trim();
+            let split = line.split("|").collect::<Vec<&str>>();
+            let winning_cards = parse_cards(split[0]);
+            let have_cards = parse_cards(split[1]);
 
-        let split = line.split("|").collect::<Vec<&str>>();
-        let winning_cards = parse_cards(split[0]);
-        let have_cards = parse_cards(split[1]);
+            let good_cards = have_cards
+                .iter()
+                .filter_map(|c| winning_cards.contains(c).then_some(*c))
+                .collect::<Vec<_>>();
+            let mut points = 0;
+            if good_cards.len() != 0 {
+                points = 2_u32.pow((good_cards.len() as u32) - 1);
+            }
 
-        let good_cards = have_cards.iter().filter_map(|c| winning_cards.contains(c).then_some(*c)).collect::<Vec<_>>();
-        let mut points = 0;
-        if good_cards.len() != 0 {
-            points = 2_u32.pow((good_cards.len() as u32) - 1);
-        }
-
-        total += points;
-    }
+            points
+        })
+        .sum();
 
     Some(total)
 }
